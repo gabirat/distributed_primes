@@ -1,6 +1,7 @@
 #ifndef JOB_H
 #define JOB_H
 
+#include <stdint.h>
 #include <stdbool.h>
 
 typedef enum job_status_e {
@@ -10,7 +11,7 @@ typedef enum job_status_e {
 } job_status;
 
 typedef struct job_s {
-    u_int64_t data;
+    uint64_t data;
     bool result;
 } job;
 
