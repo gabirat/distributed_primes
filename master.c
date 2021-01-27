@@ -139,7 +139,7 @@ int master_main(master* master) {
         for (size_t i = 0; i < master->number_of_workers; i++) {
             worker* curr_worker = master->workers[i];
             if (curr_worker->current_job_status == JOB_NOJOB) continue;
-            if (pfds->revents & POLLIN) { //Data is ready to be read
+            if (pfds[i].revents & POLLIN) { //Data is ready to be read
                 if (master_handle_incoming_data(curr_worker)) {
                     return -1;
                 }
