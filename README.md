@@ -17,10 +17,10 @@
 - [X] Funkcja sprawdzająca czy liczba jest pierwszą
 #### Master:
 - [X] Funkcja spawnująca workery 
+- [X] Stworzenie kolejki z liczbami
 - [X] Funkcja zarzadzajaca komunikacja z workerami 
 - [X] Przydzielanie pracy workerom
 - [X] Wyświetlanie wyniku obliczeń
-
 
 ### Ciekawe linki:
 
