@@ -3,11 +3,11 @@
 ### Koncept
 
 - Master spawnuje kilka workerów
-- Master czyta z pliku liste liczb pierwszych i kolejkuje je
+- Master czyta z pliku liste liczb i kolejkuje je
 - Workery oczekują na dane przekazywane przez shared memory
 - Master wysyła nowe liczby dostępnym workerom
 - Master komunikuje workerom o nowych zadaniach/danych poprzez sockety unixowe
-- Po zakonczeniu prace workey przekazuje wynik przez shared memory i komunikuje o stanie przez sockety unixowe
+- Po zakonczeniu prace worker przekazuje wynik przez shared memory i komunikuje o stanie przez sockety unixowe
 - Master agreguje wyniki i wyświetla rezultat
 
 ### TODO:
