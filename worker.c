@@ -3,7 +3,7 @@
 bool is_prime(uint64_t num) {
      if (num <= 1) return 0;
      if (num % 2 == 0 && num > 2) return 0;
-     for(uint64_t i = 3; i < num / 2; i+= 2) {
+     for(uint64_t i = 3; i * i <= num; i+= 2) {
          if (num % i == 0) return false;
      }
      return true;
