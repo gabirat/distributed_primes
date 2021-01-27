@@ -13,12 +13,13 @@
 ### TODO:
 
 #### Worker:
-- [ ] Funkcja zarzadzajaca komunikacja z masterem  
-- [ ] Funkcja sprawdzająca czy liczba jest pierwszą
+- [X] Funkcja zarzadzajaca komunikacja z masterem  
+- [X] Funkcja sprawdzająca czy liczba jest pierwszą
 #### Master:
-- [ ] Funkcja spawnująca workery 
-- [ ] Funkcja zarzadzajaca komunikacja z workerami 
-
+- [X] Funkcja spawnująca workery 
+- [X] Funkcja zarzadzajaca komunikacja z workerami 
+- [X] Przydzielanie pracy workerom
+- [X] Wyświetlanie wyniku obliczeń
 
 
 ### Ciekawe linki:
