@@ -7,8 +7,8 @@ CFLAGS = -std=c99 -Wall -Werror -Wextra
 #
 # Project files
 #
-SRCS = main.c master.c worker.c
-DEPS = job.h  master.h worker.h
+SRCS = main.c master.c worker.c queue.c
+DEPS = job.h  master.h worker.h queue.h
 LIBS = -lm
 OBJS = $(SRCS:.c=.o)
 EXE  = primes
