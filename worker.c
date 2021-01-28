@@ -33,14 +33,26 @@ int worker_main(worker* self) {
     pfds->fd = self->sv[1];
     pfds->events |= POLLIN;
     pfds->events |= POLLHUP;
+
+    //main loop
     while (1) {
+        //wait until some data is avaliable
         int ret = poll(pfds, nfds, -1);
         if (ret < 0) {
             close(self->sv[1]);
             return -1;
         }
-        if (pfds->revents & POLLIN) { //Data is ready to be read
-            worker_handle_incoming_data(self);
+
+        //Data is ready to be read
+        if (pfds->revents & POLLIN) {
+            //read freom the socket
+            if (worker_handle_incoming_data(self) < 0) {
+                close(self->sv[1]);
+                free(pfds);
+                return -1;
+            }
+
+            //do the job or quit
             if (self->current_job_status == JOB_REQUEST) {
                 self->current_job->result = is_prime(self->current_job->data);
                 self->current_job_status = JOB_FINISHED;
@@ -53,7 +65,9 @@ int worker_main(worker* self) {
             }
             
         }
-        else if (pfds->revents & POLLHUP) { //master closed the socket
+        //master closed the socket
+        //specs say POLLHUP is set when other end of the channel is closed
+        else if (pfds->revents & POLLHUP) {
             close(self->sv[1]);
             free(pfds);
             return 0;

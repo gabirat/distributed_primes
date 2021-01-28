@@ -102,11 +102,13 @@ int quit_worker(master* master, worker* worker) {
 }
 
 int master_main(master* master) {
+    //queue all numbers
     if (enqueue_primes_from_file(&master->primes_queue, 
                                   master->primes_file_path) < 0) {
         close_all_connections(master);
         return -1;
     }
+
     master->num_to_check = queue_length(&master->primes_queue);
     struct pollfd *pfds = calloc(master->number_of_workers, sizeof(*pfds));
     if (pfds == NULL) {
@@ -114,12 +116,14 @@ int master_main(master* master) {
         return -1;
     }
 
+    //setup polling
     for (size_t i = 0; i < master->number_of_workers; i++) {
-        close(master->workers[i]->sv[1]); //close workers sockets
+        close(master->workers[i]->sv[1]); //close worker socket
         pfds[i].fd = master->workers[i]->sv[0];
         pfds[i].events |= POLLIN;
     }
-    
+
+    //send initial work
     for (size_t i = 0; i < master->number_of_workers; i++) { 
         worker* curr_worker = master->workers[i];
         curr_worker->current_job = &(master->shared_jobs_space[i]);
@@ -130,25 +134,35 @@ int master_main(master* master) {
         }
     }
 
+    //main loop
     while (master->num_results < master->num_to_check) {
+        //wait until some data is avaliable
         int ret = poll(pfds, master->number_of_workers, -1);
         if (ret < 0) {
             close_all_connections(master);
             return -1;
         }
+
         for (size_t i = 0; i < master->number_of_workers; i++) {
             worker* curr_worker = master->workers[i];
             if (curr_worker->current_job_status == JOB_NOJOB) continue;
-            if (pfds[i].revents & POLLIN) { //Data is ready to be read
+
+            //Data is ready to be read
+            if (pfds[i].revents & POLLIN) {
                 if (master_handle_incoming_data(curr_worker)) {
+                    close_all_connections(master);
                     return -1;
                 }
+
+                //Show results and give new job
                 if (curr_worker->current_job_status == JOB_FINISHED) {
                     print_result(curr_worker);
                     master->num_results++;
-                    //Give a new job
+
+                    //Give a new job if there are any to distribute
                     if (master->num_given_jobs != master->num_to_check) {
                         if (give_job(master, curr_worker) < 0) {
+                            close_all_connections(master);
                             return -1;
                         }
                     }
